@@ -362,7 +362,7 @@ class Crazyflie():
         if self.link is not None and self.link.get_name() == 'ble':
             # ATT writes plus null polling can exceed the radio's 200 ms.
             timeout = max(timeout, 0.8)
-            from cflib.crtp.bletransport import bench_allowed
+            from cflib.crtp.blepolicy import bench_allowed
             if not bench_allowed(bytes([pk.get_header()]) + bytes(pk.data)):
                 # Block before scheduling retries or acquiring the send lock.
                 self.link.send_packet(pk)

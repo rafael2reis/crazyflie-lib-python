@@ -79,3 +79,12 @@ Bluetooth adapter:
 ```sh
 python -m unittest discover -s test -p test_ble_driver.py
 ```
+
+
+## Review dependencies
+
+The [standalone framing prerequisite](https://github.com/bitcraze/crazyflie-lib-python/pull/613)
+contains only the wire codec and its tests. This driver branch carries the same
+codec files until that prerequisite is incorporated upstream. The mandatory
+bench packet policy is separate in `cflib.crtp.blepolicy`; the wire codec has no
+policy or Bleak dependency.

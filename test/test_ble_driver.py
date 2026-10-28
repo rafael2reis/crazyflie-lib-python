@@ -12,10 +12,9 @@ from cflib.crazyflie import Crazyflie
 from cflib.crtp.bledriver import BleDriver
 from cflib.crtp.bledriver import FirmwareCompatibilityError
 from cflib.crtp.bledriver import parse_uri
-from cflib.crtp.bletransport import bench_allowed
+from cflib.crtp.blepolicy import bench_allowed
 from cflib.crtp.bletransport import DownDecoder
 from cflib.crtp.bletransport import fragment_up
-from cflib.crtp.bletransport import FrameError
 from cflib.crtp.crtpstack import CRTPPacket
 from cflib.crtp.exceptions import WrongUriType
 
@@ -119,25 +118,7 @@ async def fake_discover(**kwargs):
     return {IDENTIFIER: (NS(address=IDENTIFIER, name='Crazyflie-ABCDEF'), NS(local_name='Crazyflie-ABCDEF'))}
 
 
-class CodecTests(unittest.TestCase):
-    def test_all_lengths_and_pids_roundtrip(self):
-        for size in range(1, 32):
-            for pid in range(4):
-                packet = bytes(range(size))
-                decoder = DownDecoder()
-                result = None
-                for frame in fragment_up(packet, pid):
-                    result = decoder.feed(frame)
-                self.assertEqual(result, packet)
-
-    def test_corruption_rejected(self):
-        decoder = DownDecoder()
-        decoder.feed(fragment_up(bytes(31), 1)[0])
-        with self.assertRaises(FrameError):
-            decoder.feed(b'\x00\x01')
-        with self.assertRaises(FrameError):
-            decoder.feed(b'\x80\0\0')
-
+class UriAndPolicyTests(unittest.TestCase):
     def test_uri_and_policy(self):
         self.assertEqual(parse_uri(URI)[1], 'Crazyflie-ABCDEF')
         with self.assertRaises(WrongUriType):

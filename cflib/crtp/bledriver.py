@@ -11,7 +11,7 @@ from urllib.parse import urlencode
 from urllib.parse import urlsplit
 from uuid import UUID
 
-from .bletransport import bench_allowed
+from .blepolicy import bench_allowed
 from .bletransport import DownDecoder
 from .bletransport import fragment_up
 from .bletransport import FrameError
